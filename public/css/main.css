@@ -1,0 +1,98 @@
+
+html {
+  width: 100%;
+}
+
+body {
+  width: auto;
+  margin: 20px 40px;
+}
+
+#app_title {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+#audio_source {
+  width: 100%;
+  max-width: 700px;
+}
+
+#audio_source_form {
+  width: auto;
+  margin: 0 40px;
+}
+
+#audio_source_form input[type=file] {
+  width: 0px;
+  height: 0px;
+  overflow: hidden;
+  visibility: hidden;
+}
+#file_receiver {
+  width: 90%;
+  height: 50%;
+  min-width: 300px;
+  min-height: 200px;
+  margin: 0 auto;
+  background: #ccc;
+  border: 5px dashed #999;
+  text-align: center;
+  padding-top: 1px;
+}
+#file_receiver:hover {
+  background: #ddd;
+}
+#file_receiver strong {
+  font-size: 20px;
+  margin-top: 100px;
+  display: inline-block;
+}
+
+#upload_btn {
+  width: 90%;
+  min-width: 200px;
+  height: 50px;
+  background: #999;
+  border-radius: 5px;
+  border: 0 none;
+  margin: 20px auto;
+  display: block;
+  font-size: 20;
+  font-weight: 700;
+}
+#upload_btn:hover {
+  background: #bbb;
+}
+
+#results {
+  margin-top: 50px;
+}
+
+#results_title {
+  margin-bottom: 30px;
+}
+
+.result_index {
+  margin: 0 30px 0 10px;
+  line-height: 30px;
+  vertical-align: top;
+}
+
+a.operation {
+  padding: 10px;
+}
+
+input.audio_number {
+  width: 60px;
+  height: 30px;
+  margin: 0 6px;
+  text-align: center;
+  vertical-align: top;
+}
+
+.result {
+  margin-left: 30px;
+  height: 30px;
+}
+
