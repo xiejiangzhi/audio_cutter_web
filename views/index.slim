@@ -10,6 +10,11 @@
       a.operation#cut_btn href="/#{params[:id]}/results" method='post' req_via_form='true' Cut
       a.operation href="/#{params[:id]}/results_dir" method='get' req_via_form='true' Take Results
       a.operation href="/" Upload New Audio
+      a.operation#add_range_btn href="javascript: void(0)" Add range
+
+    p#range_counter_container  
+      strong Total range : 
+      span#range_counter #{current_web_results.length}
 
   
     form#results_form action="#" method='post'
@@ -22,6 +27,7 @@
           th Volume (dB)
         
         tbody#results_body
+
           - ([[{}, 0, nil, -1]] + current_web_results).each do |range, volume, audio_path, index|
             tr
               td
@@ -37,9 +43,6 @@
               td
                 - if audio_path
                   audio.result src="#{audio_path}?t=#{Time.now.to_i}" controls=1 
-          tr
-            td colspan=5
-              a.operation#add_range_btn href="javascript: void(0)" Add range
 
 
 - else

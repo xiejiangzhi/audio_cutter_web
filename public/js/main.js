@@ -5,6 +5,7 @@
   var $results_form = $('#results_form');
   var $wave_audio_source = $('#wave_audio_source');
   var $wave_toggle = $('#wave_toggle');
+  var $range_counter = $('#range_counter');
 
   var result_tempfile = $results_body.find('tr:first').remove().html();
 
@@ -92,8 +93,10 @@
     $tr.find('td:first strong').text($results_body.find('tr').length);
     $tr.find('td input[name*=range_list]').val(wavesurfer.getCurrentTime());
 
-    $results_body.find('tr:last').before($tr);
+    $results_body.append($tr);
     $tr.find('td input[name*=range_list]:last').click();
+
+    $range_counter.text(1 + Number($range_counter.text()));
   }
 
   function update_timestamp(ts){
@@ -101,7 +104,7 @@
   }
 
   
-  if ($results_body.find('tr').length == 1) {
+  if ($results_body.find('tr').length < 1) {
     add_range();
   }
 }(window));
