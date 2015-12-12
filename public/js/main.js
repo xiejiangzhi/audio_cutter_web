@@ -92,7 +92,7 @@
     var $tr = $('<tr></tr>');
     $tr.html(result_tempfile);
     $tr.find('td:first strong').text($results_body.find('tr').length);
-    $tr.find('td input[name*=range_list]').val(wavesurfer.getCurrentTime());
+    $tr.find('td input[name*=range_list]').val(wavesurfer.getCurrentTime().toFixed(2));
 
     $results_body.append($tr);
     $tr.find('td input[name*=range_list]:last').click();
