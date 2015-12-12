@@ -3,6 +3,7 @@
   var $results_body = $('#results_body');
   var $cut_btn = $('#cut_btn');
   var $results_form = $('#results_form');
+  var $audio_source = $('#audio_source');
 
   var result_tempfile = $results_body.find('tr:first').remove().html();
 
@@ -10,12 +11,15 @@
     add_range();
   });
 
+  // send request
   $('a[req_via_form=true]').click(function(event){
     var $this = $(this);
     send_req($this.attr('method'), $this.attr('href'));
     event.preventDefault()
   });
 
+  
+  // file upload
   $('#file_receiver').click(function(){
     $('#file_uploader').click();
   });
@@ -43,6 +47,17 @@
     $('#file_receiver').find('strong').text(file ? file.name : "Drop or choose file");
   });
 
+
+  // update start or end time
+  $audio_source.on('timeupdate', function(event){
+    update_timestamp(event.target.currentTime);
+  });
+  $('#results_body').on('click', 'input.audio_number', function(event){
+    $(event.target).prev().click();
+  });
+
+
+  // private methods
   function send_req(method, path){
     $results_form.attr('method', method);
     $results_form.attr('action', path);
@@ -54,8 +69,13 @@
     var $tr = $('<tr></tr>');
     $tr.html(result_tempfile);
     $tr.find('td:first strong').text($results_body.find('tr').length);
+    $tr.find('td input[name*=range_list]').val($audio_source[0].currentTime);
 
     $results_body.find('tr:last').before($tr);
+  }
+
+  function update_timestamp(ts){
+    $('#results_body input[type=radio]:checked').next().val(ts.toFixed(2));
   }
 
   

@@ -26,9 +26,11 @@
               td
                 strong.result_index = index + 1
               td
-                input.audio_number type='number' name='range_list[][start_ts]' value=(range[:start_ts]||0) required=1 min=0 step=0.1
+                input type='radio' name='force'
+                input.audio_number type='number' name='range_list[][start_ts]' value=(range[:start_ts]||0) required=1 min=0 step=0.01
               td
-                input.audio_number type='number' name='range_list[][end_ts]' value=(range[:end_ts]||0) required=1 min=0 step=0.1
+                input type='radio' name='force'
+                input.audio_number type='number' name='range_list[][end_ts]' value=(range[:end_ts]||0) required=1 min=0 step=0.01
               td
                 input.audio_number type='number' name='volume_list[]' value=volume max=100 min=-100
               td

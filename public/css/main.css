@@ -96,3 +96,7 @@ input.audio_number {
   height: 30px;
 }
 
+#results_body input[type=radio] {
+  height: 30px;
+}
+

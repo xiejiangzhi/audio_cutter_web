@@ -43,7 +43,7 @@ class AudioCutter < Sinatra::Base
     # [{start_ts: 1, end_ts}]
     def range_list
       @range_list ||= (params[:range_list] || []).map do |range|
-        range.each {|k, v| range[k] = v.to_f.round(1) }
+        range.each {|k, v| range[k] = v.to_f.round(2) }
       end
     end
 
