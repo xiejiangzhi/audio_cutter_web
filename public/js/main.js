@@ -3,7 +3,8 @@
   var $results_body = $('#results_body');
   var $cut_btn = $('#cut_btn');
   var $results_form = $('#results_form');
-  var $audio_source = $('#audio_source');
+  var $wave_audio_source = $('#wave_audio_source');
+  var $wave_toggle = $('#wave_toggle');
 
   var result_tempfile = $results_body.find('tr:first').remove().html();
 
@@ -11,12 +12,39 @@
     add_range();
   });
 
+
   // send request
   $('a[req_via_form=true]').click(function(event){
     var $this = $(this);
     send_req($this.attr('method'), $this.attr('href'));
     event.preventDefault()
   });
+
+
+  // wave play 
+  if ($wave_audio_source.length == 1) {
+    var wavesurfer = WaveSurfer.create({
+      container: '#wave_audio_source',
+      waveColor: 'violet',
+      progressColor: 'purple'
+    });
+    $wave_toggle.click(function(){
+      wavesurfer.playPause();
+    });
+    wavesurfer.load(window.AUDIO_SOURCE_SRC);
+    window.wavesurfer = wavesurfer;
+
+    // update start or end time
+    wavesurfer.on('audioprocess', function(event){
+      update_timestamp(wavesurfer.getCurrentTime());
+    });
+    wavesurfer.on('seek', function(event){
+      update_timestamp(wavesurfer.getCurrentTime());
+    });
+    $('#results_body').on('click', 'input.audio_number', function(event){
+      $(event.target).prev().click();
+    });
+  }
 
   
   // file upload
@@ -48,14 +76,7 @@
   });
 
 
-  // update start or end time
-  $audio_source.on('timeupdate', function(event){
-    update_timestamp(event.target.currentTime);
-  });
-  $('#results_body').on('click', 'input.audio_number', function(event){
-    $(event.target).prev().click();
-  });
-
+  
 
   // private methods
   function send_req(method, path){
@@ -69,9 +90,10 @@
     var $tr = $('<tr></tr>');
     $tr.html(result_tempfile);
     $tr.find('td:first strong').text($results_body.find('tr').length);
-    $tr.find('td input[name*=range_list]').val($audio_source[0].currentTime);
+    $tr.find('td input[name*=range_list]').val(wavesurfer.getCurrentTime());
 
     $results_body.find('tr:last').before($tr);
+    $tr.find('td input[name*=range_list]:last').click();
   }
 
   function update_timestamp(ts){

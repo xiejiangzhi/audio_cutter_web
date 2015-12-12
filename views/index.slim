@@ -1,10 +1,11 @@
 
 - if File.exist?(current_audio_source)
-  audio#audio_source src="#{current_web_audio_source}?t=#{Time.now.to_i}" controls=1 
+  javascript:
+    window.AUDIO_SOURCE_SRC = "#{current_web_audio_source}?t=#{Time.now.to_i}";
+  div#wave_audio_source
+  button#wave_toggle Play / Pause
 
   div#results
-    h3#results_title Results:
-
     p
       a.operation#cut_btn href="/#{params[:id]}/results" method='post' req_via_form='true' Cut
       a.operation href="/#{params[:id]}/results_dir" method='get' req_via_form='true' Take Results
