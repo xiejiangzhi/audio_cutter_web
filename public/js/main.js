@@ -43,8 +43,10 @@
     wavesurfer.on('seek', function(event){
       update_timestamp(wavesurfer.getCurrentTime());
     });
-    $('#results_body').on('click', 'input.audio_number', function(event){
-      $(event.target).prev().click();
+    $('#results_body').on('click', 'input[name*=range_list]', function(event){
+      var $el = $(event.target);
+      $el.prev().click();
+      wavesurfer.seekTo(Number($el.val()) / wavesurfer.getDuration());
     });
   }
 
