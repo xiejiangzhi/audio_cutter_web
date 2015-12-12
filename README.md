@@ -2,6 +2,8 @@
 Audio Cutter Web
 ================
 
+![example](public/images/example.png)
+
 ## Require
 
 * ffmpeg
