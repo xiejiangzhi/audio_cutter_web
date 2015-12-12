@@ -27,7 +27,8 @@
     var wavesurfer = WaveSurfer.create({
       container: '#wave_audio_source',
       waveColor: 'violet',
-      progressColor: 'purple'
+      progressColor: 'purple',
+      scrollParent: true
     });
     $wave_toggle.click(function(){
       wavesurfer.playPause();
