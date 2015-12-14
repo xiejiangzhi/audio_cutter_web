@@ -1,3 +1,5 @@
+require 'bundler/setup'
+
 require 'sinatra/base'
 require 'active_support'
 require 'active_support/core_ext'

@@ -1,9 +1,13 @@
 #! /usr/bin/env ruby
 
+puts "init..."
+
 unless system('which -s ffmpeg')
   puts "Not found ffmpeg, please install."
   exit
 end
+
+system 'bundle install'
 
 require './app'
 
