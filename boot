@@ -2,14 +2,17 @@
 
 puts "init..."
 
+ROOT_DIR = File.dirname(__FILE__)
+Dir.chdir(ROOT_DIR)
+
 unless system('which -s ffmpeg')
   puts "Not found ffmpeg, please install."
   exit
 end
 
-system 'bundle install'
+system "cd #{ROOT_DIR}; bundle install --path ./gems"
 
-require './app'
+require File.join(ROOT_DIR, 'app')
 
 web_server_thread = Thread.new do
   AudioCutter.run!

@@ -1,4 +1,6 @@
 *.swp
 
 public/audios
+.bundle
+gems
 

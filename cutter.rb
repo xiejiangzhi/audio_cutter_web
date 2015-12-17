@@ -22,6 +22,7 @@ class Cutter
 
       cmd << ("-ss %.1f -t %.1f" % [start_ts, duration])
       cmd << ("-af 'volume=%sdB'" % volume) if volume
+      cmd << "-write_xing 0"
       cmd << ("#{options[:out_dir]}/%s.mp3" % cut_index.to_s)
     end
 

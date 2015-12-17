@@ -3,7 +3,7 @@ require 'bundler/setup'
 require 'sinatra/base'
 require 'active_support'
 require 'active_support/core_ext'
-require './cutter'
+require File.expand_path('../cutter', __FILE__)
 
 require 'securerandom'
 require 'shellwords'

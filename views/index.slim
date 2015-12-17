@@ -3,7 +3,10 @@
   javascript:
     window.AUDIO_SOURCE_SRC = "#{current_web_audio_source}?t=#{Time.now.to_i}";
   div#wave_audio_source
-  button#wave_toggle Play / Pause
+  button#wave_zoom_add.btn +
+  span#wave_zoom_val 100
+  button#wave_zoom_subtract.btn -
+  button#wave_toggle.btn Play / Pause
 
   div#results
     p
@@ -25,6 +28,8 @@
           th Start TS
           th End TS
           th Volume (dB)
+          th Options
+          th Audio
         
         tbody#results_body
 
@@ -40,6 +45,8 @@
                 input.audio_number type='number' name='range_list[][end_ts]' value=(range[:end_ts]||0) required=1 min=0 step=0.01
               td
                 input.audio_number type='number' name='volume_list[]' value=volume max=100 min=-100
+              td
+                a.del_range href='#' Del
               td
                 - if audio_path
                   audio.result src="#{audio_path}?t=#{Time.now.to_i}" controls=1 

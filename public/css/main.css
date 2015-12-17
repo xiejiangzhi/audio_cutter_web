@@ -13,20 +13,36 @@ body {
   margin-bottom: 20px;
 }
 
-
-#wave_toggle {
-  width: 150px;
+.btn {
+  width: 100px;
   height: 35px;
   background: #999;
   border-radius: 3px;
   border: 0 none;
-  margin: 10px auto;
-  display: block;
+  display: inline-block;
   font-size: 20;
   font-weight: 500;
 }
-#wave_toggle:hover {
+.btn:hover {
   background: #aaa;
+}
+
+
+#wave_toggle {
+  width: 150px;
+  margin-top: 10px;
+  margin-left: 30%;
+}
+#wave_zoom_add {
+  width: 40px;
+  height: 35px;
+  margin: 10px 10px 0 0;
+
+}
+#wave_zoom_subtract {
+  width: 40px;
+  height: 35px;
+  margin: 10px 0 0 10px;
 }
 
 

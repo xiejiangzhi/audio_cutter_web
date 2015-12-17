@@ -6,6 +6,9 @@
   var $wave_audio_source = $('#wave_audio_source');
   var $wave_toggle = $('#wave_toggle');
   var $range_counter = $('#range_counter');
+  var $wave_zoom_val = $('#wave_zoom_val');
+  var wavesurfer = null;
+  var zoom_change_timer = null;
 
   var result_tempfile = $results_body.find('tr:first').remove().html();
 
@@ -24,11 +27,12 @@
 
   // wave play 
   if ($wave_audio_source.length == 1) {
-    var wavesurfer = WaveSurfer.create({
+    wavesurfer = WaveSurfer.create({
       container: '#wave_audio_source',
       waveColor: 'violet',
       progressColor: 'purple',
-      scrollParent: true
+      scrollParent: true,
+      minPxPerSec: Number($wave_zoom_val.text())
     });
     $wave_toggle.click(function(){
       wavesurfer.playPause();
@@ -48,6 +52,12 @@
       $el.prev().click();
       wavesurfer.seekTo(Number($el.val()) / wavesurfer.getDuration());
     });
+    $('#results_body').on('click', 'a.del_range', function(event){
+      $(event.target).parents('tr:first').remove();
+    });
+
+    mousedown_multiple_events($('#wave_zoom_add'), 10, 50);
+    mousedown_multiple_events($('#wave_zoom_subtract'), -10, 50);
   }
 
   
@@ -104,6 +114,33 @@
 
   function update_timestamp(ts){
     $('#results_body input[type=radio]:checked').next().val(ts.toFixed(2));
+  }
+
+  function reset_zoom_change_timer() {
+    if (zoom_change_timer) {
+      clearInterval(zoom_change_timer);
+      zoom_change_timer = null;
+    }
+  }
+
+  function mousedown_multiple_events($el, incr_val, interval){
+    $el.mousedown(function(){
+      reset_zoom_change_timer();
+
+      zoom_change_timer = window.setInterval(function(){
+        incr_wave_zoom(incr_val);
+      }, interval);
+    });
+
+    $el.mouseup(function(){
+      reset_zoom_change_timer();
+    });
+  }
+
+  function incr_wave_zoom(number){
+    var val = Number($wave_zoom_val.text()) + number;
+    $wave_zoom_val.text(val < 0 ? 0 : val);
+    wavesurfer.zoom(val);
   }
 
   
