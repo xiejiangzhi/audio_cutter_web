@@ -12,6 +12,7 @@ require 'pry'
 class AudioCutter < Sinatra::Base
   set :root, File.dirname(__FILE__)
   set :public_foler, File.join(root, 'public')
+  set :server, :thin
 
   helpers do
     def current_id
