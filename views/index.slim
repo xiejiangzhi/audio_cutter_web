@@ -44,7 +44,8 @@
               td
                 input.audio_number type='number' name='volume_list[]' value=volume max=100 min=-100
               td
-                a.del_range href='#' Del
+                a.operation.del_range href='#' Del
+                a.operation.play_range href='#' Play
               td
                 - if audio_path
                   audio.result src="#{audio_path}?t=#{Time.now.to_i}" controls=1 

@@ -9,6 +9,7 @@
   var $wave_zoom_val = $('#wave_zoom_val');
   var wavesurfer = null;
   var wave_region = null;
+  var can_update_timestamp = true;
 
   var result_tempfile = $results_body.find('tr:first').remove().html();
 
@@ -58,30 +59,66 @@
       update_region();
     });
 
+    wavesurfer.on('play', function(){
+      console.log('play')
+    });
+    wavesurfer.on('pause', function(){
+      can_update_timestamp = true;
+      console.log('pause')
+
+      var $radio = $results_body.find('input[type=radio]:checked');
+      if ($radio[0]) {
+        console.log($radio.next().val());
+        wavesurfer.seekTo(Number($radio.next().val()) / wavesurfer.getDuration());
+      }
+    });
+
     $wave_toggle.click(function(){
       wavesurfer.playPause();
     });
 
     // update start or end time
     wavesurfer.on('audioprocess', function(event){
-      update_timestamp(wavesurfer.getCurrentTime());
+      if (can_update_timestamp) {
+        update_timestamp(wavesurfer.getCurrentTime());
+      }
     });
     wavesurfer.on('seek', function(event){
-      update_timestamp(wavesurfer.getCurrentTime());
+      if (can_update_timestamp) {
+        update_timestamp(wavesurfer.getCurrentTime());
+      }
     });
-    $('#results_body').on('click', 'input[name*=range_list]', function(event){
+    $('#results_body').on('click', 'input[name*=range_list],input[name=radio]', function(event){
       var $el = $(event.target);
-      $el.prev().click();
-      wavesurfer.seekTo(Number($el.val()) / wavesurfer.getDuration());
+      $el.prev()[0].checked = true;
+
+      if (can_update_timestamp) {
+        wavesurfer.seekTo(Number($el.val()) / wavesurfer.getDuration());
+      }
     });
-    $('#results_body').on('click', 'a.del_range', function(event){
-      $(event.target).parents('tr:first').remove();
-    });
+
+    // update region
     $('#results_body').on('change', 'input[name*=range_list]', function(event){
       update_region();
     });
 
+    // operations
+    $('#results_body').on('click', 'a.del_range', function(event){
+      $(event.target).parents('tr:first').remove();
+      $range_counter.text(Number($range_counter.text()) - 1);
+      $results_body.find('tr').each(function(index, el){
+        $(el).find('td:first').text(index + 1);
+      });
+    });
+    $('#results_body').on('click', 'a.play_range', function(event){
+      var $tr = $(event.target).parents('tr:first');
+      update_region($tr);
+      can_update_timestamp = false;
+      wave_region.play();
+    });
+
     wavesurfer.load(window.AUDIO_SOURCE_SRC);
+    window.wavesurfer = wavesurfer;
   }
 
   
@@ -137,16 +174,20 @@
   }
 
   function update_timestamp(ts){
+    if (!can_update_timestamp) { return }
     var $el = $results_body.find('input[type=radio]:checked').next();
     $el.val(ts.toFixed(2));
     $el.change();
   }
 
-  function update_region(){
+  function update_region($tr){
     if (!wave_region) { return }
 
-    var $radio = $results_body.find('input[type=radio]:checked');
-    var $tr = $radio.parents('tr:first');
+    if (!$tr) {
+      var $radio = $results_body.find('input[type=radio]:checked');
+      var $tr = $radio.parents('tr:first');
+    }
+
     var start = $tr.find('input[name*=start_ts]:first').val();
     var end = $tr.find('input[name*=end_ts]:first').val();
 
