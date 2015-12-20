@@ -30,19 +30,8 @@ body {
 
 #wave_toggle {
   width: 150px;
-  margin-top: 10px;
-  margin-left: 30%;
-}
-#wave_zoom_add {
-  width: 40px;
-  height: 35px;
-  margin: 10px 10px 0 0;
-
-}
-#wave_zoom_subtract {
-  width: 40px;
-  height: 35px;
-  margin: 10px 0 0 10px;
+  display: block;
+  margin: 10px auto 0 auto;
 }
 
 

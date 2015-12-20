@@ -3,9 +3,7 @@
   javascript:
     window.AUDIO_SOURCE_SRC = "#{current_web_audio_source}?t=#{Time.now.to_i}";
   div#wave_audio_source
-  button#wave_zoom_add.btn +
-  span#wave_zoom_val 100
-  button#wave_zoom_subtract.btn -
+  div#wave_audio_timeline
   button#wave_toggle.btn Play / Pause
 
   div#results
@@ -38,10 +36,10 @@
               td
                 strong.result_index = index + 1
               td
-                input type='radio' name='force'
+                input type='radio' name='focus'
                 input.audio_number type='number' name='range_list[][start_ts]' value=(range[:start_ts]||0) required=1 min=0 step=0.01
               td
-                input type='radio' name='force'
+                input type='radio' name='focus'
                 input.audio_number type='number' name='range_list[][end_ts]' value=(range[:end_ts]||0) required=1 min=0 step=0.01
               td
                 input.audio_number type='number' name='volume_list[]' value=volume max=100 min=-100

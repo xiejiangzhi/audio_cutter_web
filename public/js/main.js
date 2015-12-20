@@ -8,7 +8,7 @@
   var $range_counter = $('#range_counter');
   var $wave_zoom_val = $('#wave_zoom_val');
   var wavesurfer = null;
-  var zoom_change_timer = null;
+  var wave_region = null;
 
   var result_tempfile = $results_body.find('tr:first').remove().html();
 
@@ -29,16 +29,38 @@
   if ($wave_audio_source.length == 1) {
     wavesurfer = WaveSurfer.create({
       container: '#wave_audio_source',
-      waveColor: 'violet',
-      progressColor: 'purple',
       scrollParent: true,
-      minPxPerSec: Number($wave_zoom_val.text())
+      pixelRatio: 1,
+      normalize: true,
+      minimap: true
     });
+    
+    wavesurfer.initMinimap({
+      height: 30,
+      waveColor: '#ddd',
+      progressColor: '#999',
+      cursorColor: '#999'
+    });
+
+    wavesurfer.on('ready', function(){
+      var timeline = Object.create(WaveSurfer.Timeline);
+      timeline.init({
+        wavesurfer: wavesurfer,
+        container: '#wave_audio_timeline'
+      });
+
+      wave_region = wavesurfer.addRegion({
+        drag: false,
+        start: 0,
+        end: 10,
+        color: 'rgba(0, 0, 255, 0.1)'
+      });
+      update_region();
+    });
+
     $wave_toggle.click(function(){
       wavesurfer.playPause();
     });
-    wavesurfer.load(window.AUDIO_SOURCE_SRC);
-    window.wavesurfer = wavesurfer;
 
     // update start or end time
     wavesurfer.on('audioprocess', function(event){
@@ -55,9 +77,11 @@
     $('#results_body').on('click', 'a.del_range', function(event){
       $(event.target).parents('tr:first').remove();
     });
+    $('#results_body').on('change', 'input[name*=range_list]', function(event){
+      update_region();
+    });
 
-    mousedown_multiple_events($('#wave_zoom_add'), 10, 50);
-    mousedown_multiple_events($('#wave_zoom_subtract'), -10, 50);
+    wavesurfer.load(window.AUDIO_SOURCE_SRC);
   }
 
   
@@ -113,34 +137,23 @@
   }
 
   function update_timestamp(ts){
-    $('#results_body input[type=radio]:checked').next().val(ts.toFixed(2));
+    var $el = $results_body.find('input[type=radio]:checked').next();
+    $el.val(ts.toFixed(2));
+    $el.change();
   }
 
-  function reset_zoom_change_timer() {
-    if (zoom_change_timer) {
-      clearInterval(zoom_change_timer);
-      zoom_change_timer = null;
-    }
-  }
+  function update_region(){
+    if (!wave_region) { return }
 
-  function mousedown_multiple_events($el, incr_val, interval){
-    $el.mousedown(function(){
-      reset_zoom_change_timer();
+    var $radio = $results_body.find('input[type=radio]:checked');
+    var $tr = $radio.parents('tr:first');
+    var start = $tr.find('input[name*=start_ts]:first').val();
+    var end = $tr.find('input[name*=end_ts]:first').val();
 
-      zoom_change_timer = window.setInterval(function(){
-        incr_wave_zoom(incr_val);
-      }, interval);
-    });
-
-    $el.mouseup(function(){
-      reset_zoom_change_timer();
-    });
-  }
-
-  function incr_wave_zoom(number){
-    var val = Number($wave_zoom_val.text()) + number;
-    $wave_zoom_val.text(val < 0 ? 0 : val);
-    wavesurfer.zoom(val);
+    wave_region.update({
+      start: Number(start),
+      end: Number(end)
+    })
   }
 
   
