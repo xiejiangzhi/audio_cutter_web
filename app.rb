@@ -102,7 +102,12 @@ class AudioCutter < Sinatra::Base
 
   post '/:id/audio' do
     audio_path = params[:audio][:tempfile].path
-    system("mv #{audio_path} #{current_audio_source}")
+    cmd = [
+      "ffmpeg -y -i #{audio_path}",
+      "-ab 128k -map_metadata 0 -id3v2_version 3 #{current_audio_source}"
+    ].join(' ')
+    puts cmd
+    system(cmd)
     redirect_to_current_web_root
   end
 
