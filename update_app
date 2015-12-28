@@ -1,4 +1,5 @@
-#! /usr/bin/env bash
+#! /usr/bin/env ruby
 
-git pull origin master
+Dir.chdir(File.dirname(__FILE__))
+system('git pull origin master')
 

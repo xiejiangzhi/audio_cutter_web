@@ -4,3 +4,5 @@ public/audios
 .bundle
 gems
 
+server.pid
+
