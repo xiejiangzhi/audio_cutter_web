@@ -13,12 +13,17 @@
       a.operation href="/" Upload New Audio
       a.operation#add_range_btn href="javascript: void(0)" Add range
 
-    p#range_counter_container  
+    p.inline-container#range_counter_container
       strong Total range : 
       span#range_counter #{current_web_results.length}
 
   
     form#results_form action="#" method='post'
+      - no_start_index = (params[:no_start_index]||1).to_i
+      p.inline-container#start_index_container
+        strong Start Index : 
+        input#no_start_index type="number" name="no_start_index" value=no_start_index
+
       table
         thead
          tr
@@ -34,7 +39,7 @@
           - ([[{}, 0, nil, -1]] + current_web_results).each do |range, volume, audio_path, index|
             tr
               td
-                strong.result_index = index + 1
+                strong.result_index = no_start_index + index
               td
                 input type='radio' name='focus'
                 input.audio_number type='number' name='range_list[][start_ts]' value=(range[:start_ts]||0) required=1 min=0 step=0.01

@@ -27,6 +27,17 @@ body {
   background: #aaa;
 }
 
+.inline-container {
+  display: inline-block;
+  margin: 5px 15px;
+}
+
+input[type=text], input[type=number] {
+  height: 30px;
+  margin: 0 6px;
+  text-align: center;
+  vertical-align: top;
+}
 
 #wave_toggle {
   width: 150px;
@@ -88,11 +99,6 @@ a.operation {
 }
 
 
-#range_counter_container {
-  padding-left: 10px;
-}
-
-
 #results {
   margin-top: 20px;
 }
@@ -122,5 +128,10 @@ input.audio_number {
 
 .operation {
   margin-right: 10px;
+}
+
+#no_start_index {
+  width: 40px;
+  height: 25px;
 }
 

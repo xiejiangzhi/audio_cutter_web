@@ -3,6 +3,7 @@
   var $results_body = $('#results_body');
   var $cut_btn = $('#cut_btn');
   var $results_form = $('#results_form');
+  var $no_start_index = $('#no_start_index');
   var $wave_audio_source = $('#wave_audio_source');
   var $wave_toggle = $('#wave_toggle');
   var $range_counter = $('#range_counter');
@@ -10,6 +11,7 @@
   var wavesurfer = null;
   var wave_region = null;
   var can_update_timestamp = true;
+  var max_px_per_sec = 200;
 
   var result_tempfile = $results_body.find('tr:first').remove().html();
 
@@ -33,7 +35,9 @@
       scrollParent: true,
       pixelRatio: 1,
       normalize: true,
-      minimap: true
+      minimap: true,
+      height: 80,
+      minPxPerSec: 15
     });
     
     wavesurfer.initMinimap({
@@ -44,6 +48,8 @@
     });
 
     wavesurfer.on('ready', function(){
+      var px_per_sec = 30000 / wavesurfer.getDuration();
+      wavesurfer.zoom(px_per_sec > max_px_per_sec ? max_px_per_sec : px_per_sec);
       var timeline = Object.create(WaveSurfer.Timeline);
       timeline.init({
         wavesurfer: wavesurfer,
@@ -104,10 +110,11 @@
 
     // operations
     $('#results_body').on('click', 'a.del_range', function(event){
+      var no_start_index = Number($no_start_index.val());
       $(event.target).parents('tr:first').remove();
       $range_counter.text(Number($range_counter.text()) - 1);
       $results_body.find('tr').each(function(index, el){
-        $(el).find('td:first').text(index + 1);
+        $(el).find('td:first strong').text(no_start_index + index);
       });
     });
     $('#results_body').on('click', 'a.play_range', function(event){
@@ -163,8 +170,9 @@
 
   function add_range(){
     var $tr = $('<tr></tr>');
+    var no_start_index = Number($no_start_index.val());
     $tr.html(result_tempfile);
-    $tr.find('td:first strong').text($results_body.find('tr').length + 1);
+    $tr.find('td:first strong').text(no_start_index + $results_body.find('tr').length);
     $tr.find('td input[name*=range_list]').val(wavesurfer.getCurrentTime().toFixed(2));
 
     $results_body.append($tr);

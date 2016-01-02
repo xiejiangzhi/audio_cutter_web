@@ -44,10 +44,13 @@ class AudioCutter < Sinatra::Base
       File.join(current_audios_dir, 'cut')
     end
 
-    # [{start_ts: 1, end_ts}]
+    # [{start_ts: 1, end_ts: 2, filename: fn}]
     def range_list
-      @range_list ||= (params[:range_list] || []).map do |range|
-        range.each {|k, v| range[k] = v.to_f.round(2) }
+      @range_list ||= (params[:range_list] || []).each_with_index.map do |range, index|
+        {}.tap do |result|
+          [:start_ts, :end_ts].each {|key| result[key] = range[key].to_f.round(2) }
+          result[:filename] = ((params[:no_start_index] || 1).to_i + index).to_s
+        end
       end
     end
 
@@ -60,7 +63,7 @@ class AudioCutter < Sinatra::Base
     def current_web_results
       range_list.each_with_index.map do |range, index|
         volume = volume_list[index]
-        audio_path = File.join('cut', "#{index + 1}.mp3")
+        audio_path = File.join('cut', "#{range[:filename]}.mp3")
 
         audio_path = if File.exist?(File.join(current_audios_dir, audio_path))
           File.join(current_web_audios_dir, audio_path)
@@ -76,7 +79,7 @@ class AudioCutter < Sinatra::Base
     end
 
     def clean_invalid_results!
-      valid_file_names = range_list.length.times.map {|i| "#{i + 1}.mp3" }
+      valid_file_names = range_list.map {|range| "#{range[:filename]}.mp3" }
 
       Dir[File.join(current_results_dir, '*')].each do |path|
         next if valid_file_names.include?(File.basename(path))
@@ -85,7 +88,10 @@ class AudioCutter < Sinatra::Base
     end
 
     def redirect_to_current_web_root
-      redirect to(current_web_root + "?" + params.slice('range_list', 'volume_list').to_query)
+      data = params.slice(
+        'range_list', 'volume_list', 'no_start_index'
+      )
+      redirect to(current_web_root + "?" + data.to_query)
     end
   end
 
@@ -119,7 +125,7 @@ class AudioCutter < Sinatra::Base
     Cutter.new({
       audio_file: current_audio_source,
       out_dir: current_results_dir,
-      range_list: range_list.map {|range| range.values_at(:start_ts, :end_ts) },
+      range_list: range_list.map {|range| range.values_at(:start_ts, :end_ts, :filename) },
       volume_list: volume_list
     }).cut
 
