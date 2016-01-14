@@ -15,6 +15,8 @@ class AudioCutter < Sinatra::Base
   set :public_foler, File.join(root, 'public')
   set :server, :thin
 
+  REQ_LOGGER = Logger.new(File.expand_path('../log/req.log', __FILE__))
+
   helpers do
     def current_id
       params[:id]
@@ -88,11 +90,20 @@ class AudioCutter < Sinatra::Base
     end
 
     def redirect_to_current_web_root
-      data = params.slice(
+      redirect to(current_web_root + "?" + request_data.to_query)
+    end
+
+    def request_data
+      @request_data ||= params.slice(
         'range_list', 'volume_list', 'no_start_index'
       )
-      redirect to(current_web_root + "?" + data.to_query)
     end
+  end
+
+
+  before do
+    req_data = request.env['rack.request.form_vars'] || request.env['QUERY_STRING']
+    REQ_LOGGER.info("#{request.path}?#{req_data}") if req_data.to_s.length > 0
   end
 
 
